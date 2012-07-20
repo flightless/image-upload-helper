@@ -19,6 +19,16 @@ IUP_updateMediaForm = function() {
 	});
 	$('a.wp-post-thumbnail').hide().click( function() { return false; });
 	$('table.describe').find('tr.post_excerpt, tr.post_content, tr.url, tr.align, tr.image-size, tr.exclude-from-gallery').hide();
+
+	// carry over settings when using the search box
+	$('#media-search').parents('form').each( function() {
+		var form = $(this);
+		if ( form.find('input[name=image-upload-helper]').length < 1 ) {
+			var input = $('<input type="hidden" name="image-upload-helper" />');
+			input.val(ImageUploadHelper.short_label);
+			form.append(input);
+		}
+	});
 };
 
 IUP_original_updateMediaForm = updateMediaForm;

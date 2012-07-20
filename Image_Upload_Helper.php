@@ -2,7 +2,7 @@
 
 class Image_Upload_Helper {
 	const TEXT_DOMAIN = 'Image_Upload_Helper';
-	const VERSION = 1.20;
+	const VERSION = 1.3;
 
 	public static function init() {
 		add_action('admin_enqueue_scripts', array(__CLASS__, 'register_scripts'), 0, 1);
