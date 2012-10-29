@@ -121,11 +121,11 @@ class Image_Upload_Helper {
 	 * @return string html
 	 */
 	public function thumbnail_html( $args = array() ) {
-		global $content_width, $_wp_additional_image_sizes;
+		global $content_width;
 		$defaults = array(
 			'label' => 'thumbnail image',
 			'thumbnail_id' => NULL,
-			'size' => 'post-thumbnail',
+			'size' => 'thumbnail',
 			'field_name' => 'image-upload-helper',
 		);
 		$args = wp_parse_args($args, $defaults);
@@ -137,9 +137,6 @@ class Image_Upload_Helper {
 		 * @var string $field_name
 		 */
 		extract($args);
-		if ( !is_scalar($size) || !isset( $_wp_additional_image_sizes[$size] ) ) {
-			$size = 'post-thumbnail';
-		};
 
 		// hack to make sure our query args get added before TB_iframe so they get passed on
 		$url = remove_query_arg('TB_iframe', get_upload_iframe_src('image'));
