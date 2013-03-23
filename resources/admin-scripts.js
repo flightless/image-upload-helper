@@ -10,9 +10,10 @@
 				action: 'image_upload_helper_image',
 				thumbnail_id: id,
 				label: $input.parents('.image-upload-helper').find('.image-upload-helper-label').text(),
-				size: $input.siblings('.image-upload-helper-size').val(),
+				size: $input.data('size'),
 				field_name: $input.attr('name'),
-				post_ID: $('#post_ID').val()
+				post_ID: $('#post_ID').val(),
+				type: $input.data('type')
 			},
 			function(data) {
 				$input.parents('.image-upload-helper').replaceWith(data);
@@ -27,7 +28,7 @@
 		$('body').on('click', 'a.image-upload-helper-remove', function() {
 			var $div = $(this).parents('.image-upload-helper');
 			var label = $div.find('.image-upload-helper-label').text();
-			$div.find('a.image-upload-helper-set img').fadeOut(500, function() {
+			$div.find('a.image-upload-helper-set img, a.image-upload-helper-set span').fadeOut(500, function() {
 				$(this).parent().text('Set '+label);
 				$(this).remove();
 			});

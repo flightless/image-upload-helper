@@ -3,7 +3,7 @@ Contributors: jbrinley
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=A69NZPKWGB6H2
 Tags: images, admin, uploading, library
 Requires at least: 3.3
-Tested up to: 3.3.2
+Tested up to: 3.5.1
 Stable tag: trunk
 License: MIT
 License URI: http://www.opensource.org/licenses/mit-license.php
@@ -50,6 +50,10 @@ When a form is submitted with an Image Upload Helper field, the field specified 
 will contain the attachment ID of the selected image.
 
 == Changelog ==
+
+= 1.4 =
+
+Add support for uploading non-image files
 
 = 1.0 =
 

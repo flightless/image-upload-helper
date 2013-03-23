@@ -2,7 +2,7 @@
 
 class Image_Upload_Helper {
 	const TEXT_DOMAIN = 'Image_Upload_Helper';
-	const VERSION = 1.3;
+	const VERSION = 1.4;
 
 	public static function init() {
 		add_action('admin_enqueue_scripts', array(__CLASS__, 'register_scripts'), 0, 1);
@@ -39,7 +39,7 @@ class Image_Upload_Helper {
 		global $post_ID;
 		$helper = new self();
 		$args = array();
-		foreach ( array('thumbnail_id', 'label', 'size', 'field_name') as $arg ) {
+		foreach ( array('thumbnail_id', 'label', 'size', 'field_name', 'type') as $arg ) {
 			if ( !empty($_REQUEST[$arg]) ) {
 				$args[$arg] = $_REQUEST[$arg];
 			}
@@ -127,6 +127,7 @@ class Image_Upload_Helper {
 			'thumbnail_id' => NULL,
 			'size' => 'thumbnail',
 			'field_name' => 'image-upload-helper',
+			'type' => 'image',
 		);
 		$args = wp_parse_args($args, $defaults);
 
@@ -135,28 +136,34 @@ class Image_Upload_Helper {
 		 * @var string $label
 		 * @var string $size
 		 * @var string $field_name
+		 * @var string $type
 		 */
 		extract($args);
 
 		// hack to make sure our query args get added before TB_iframe so they get passed on
-		$url = remove_query_arg('TB_iframe', get_upload_iframe_src('image'));
+		$url = remove_query_arg('TB_iframe', get_upload_iframe_src($type));
 		$url = add_query_arg(array('image-upload-helper' => urlencode($label)), $url);
 		$url = add_query_arg(array('TB_iframe' => true), $url);
 		$set_thumbnail_link = '<p class="hide-if-no-js"><a title="' . esc_attr__( sprintf(self::__('Set %s'), $label) ) . '" href="' . esc_url( $url ) . '" class="thickbox image-upload-helper-set">%s</a></p>';
 		$content = sprintf($set_thumbnail_link, sprintf(self::__('Set <span class="image-upload-helper-label">%s</span>'), esc_html($label)) );
 
 		if ( $thumbnail_id && get_post( $thumbnail_id ) ) {
-			$old_content_width = $content_width;
-			$content_width = 266;
-			$thumbnail_html = wp_get_attachment_image( $thumbnail_id, $size );
-			if ( !empty( $thumbnail_html ) ) {
-				$content = sprintf($set_thumbnail_link, $thumbnail_html);
-				$content .= '<p class="hide-if-no-js"><a href="#" class="image-upload-helper-remove">' . sprintf(self::__('Remove <span class="image-upload-helper-label">%s</span>'), esc_html($label)) . '</a></p>';
+			if ( $type == 'image' ) {
+				$old_content_width = $content_width;
+				$content_width = 266;
+				$thumbnail_html = wp_get_attachment_image( $thumbnail_id, $size );
+				if ( !empty( $thumbnail_html ) ) {
+					$content = sprintf($set_thumbnail_link, $thumbnail_html);
+				}
+				$content_width = $old_content_width;
+			} else {
+				$attachment_url = wp_get_attachment_url($thumbnail_id);
+				$filename = basename($attachment_url);
+				$content = sprintf($set_thumbnail_link, '<span>'.$filename.'</span>');
 			}
-			$content_width = $old_content_width;
+			$content .= '<p class="hide-if-no-js"><a href="#" class="image-upload-helper-remove">' . sprintf(self::__('Remove <span class="image-upload-helper-label">%s</span>'), esc_html($label)) . '</a></p>';
 		}
-		$content .= sprintf('<input type="hidden" name="%s" value="%d" class="image-upload-helper-input" />', $field_name, $thumbnail_id);
-		$content .= sprintf('<input type="hidden" disabled="disabled" value="%s" class="image-upload-helper-size" />', $size);
+		$content .= sprintf('<input type="hidden" name="%s" value="%d" class="image-upload-helper-input" data-type="%s" data-size="%s" />', $field_name, $thumbnail_id, $type, $size);
 		$content = '<div class="image-upload-helper">'.$content.'</div>';
 		return apply_filters( 'image_upload_helper_html', $content );
 	}

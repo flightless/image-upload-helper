@@ -1,16 +1,16 @@
 <?php
 /**
  * @package Flightless
- * @version 1.0
+ * @version 1.4
  */
 /*
 Plugin Name: Image Upload Helper
 Plugin URI: https://github.com/flightless/image-upload-helper
-Description: Adds a field for uploading images via WordPress's popup iframe
+Description: Adds a field for uploading images and other documents via WordPress's popup iframe
 Author: Flightless, Inc
 Author URI: http://flightless.us/
 Contributors: jbrinley, Modern Tribe
-Version: 1.0
+Version: 1.4
 */
 
 /**
